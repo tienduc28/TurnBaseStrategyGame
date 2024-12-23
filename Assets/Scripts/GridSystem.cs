@@ -33,5 +33,17 @@ public class GridSystem
             Mathf.RoundToInt(worldPosition.z / cellSize)
         );
     }
+
+    public void CreateDebugObjects(Transform debugPrefab)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(x, z), Quaternion.identity);
+                //debugTransform.gameObject = GameObject;
+            }
+        }
+    }
 }
  
