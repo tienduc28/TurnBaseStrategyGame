@@ -10,11 +10,17 @@ public class Unit : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    private GridPosition gridPosition;
     private void Awake()
     {
         targetPosition = transform.position;
     }
-    
+
+    private void Start()
+    {
+        gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
+    }
     private void Update()
     {
 
@@ -32,6 +38,14 @@ public class Unit : MonoBehaviour
         } else
         {
             unitAnimator.SetBool("IsWalking", false);
+        }
+
+        GridPosition newgridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if (newgridPosition != gridPosition)
+        {
+            //Unit changed Grid Position
+            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newgridPosition);
+            gridPosition = newgridPosition;
         }
     }
 
