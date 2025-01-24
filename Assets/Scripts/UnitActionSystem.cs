@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class UnitActionSystem : MonoBehaviour
 {
+
     public static UnitActionSystem Instance { get; private set; }
 
 
@@ -32,7 +33,15 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (TryHandleUnitSelection()) return;
 
-            selectedUnit.Move(MouseWorld.GetPosition());
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+
+            //Debug.Log(mouseGridPosition);
+            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
+            {
+                selectedUnit.GetMoveAction().Move(mouseGridPosition);
+            }
+
+            //selectedUnit.GetMoveAction().Move(MouseWorld.GetPosition());
         }
     }
 
