@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class MoveAction : BaseAction
     {
         if (!isActive)
         {
-            return;
+            return; 
         }
         Vector3 moveDirection = (targetPosition - transform.position).normalized;
         float stoppingDistance = .1f;
@@ -37,6 +38,7 @@ public class MoveAction : BaseAction
         {
             unitAnimator.SetBool("IsWalking", false);
             isActive = false;
+            onActionComplete();
         }
 
         float rotateSpeed = 10f;
@@ -44,8 +46,9 @@ public class MoveAction : BaseAction
 
     }
 
-    public void Move(GridPosition gridPosition)
+    public void Move(GridPosition gridPosition, Action onActionComplete)
     {
+        this.onActionComplete = onActionComplete;
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
         isActive = true;
     }
