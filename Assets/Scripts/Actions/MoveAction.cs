@@ -41,7 +41,7 @@ public class MoveAction : BaseAction
             onActionComplete();
         }
 
-        float rotateSpeed = 10f;
+        float rotateSpeed = 15f;
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
 
     }
@@ -97,4 +97,8 @@ public class MoveAction : BaseAction
         return validGridPositionList;
     }
 
+    public override string GetActionName()
+    {
+        return "Move";
+    }
 }
