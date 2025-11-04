@@ -39,12 +39,14 @@ public class Unit : MonoBehaviour
     }
     private void Update()
     {
-        GridPosition newgridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-        if (newgridPosition != gridPosition)
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if (newGridPosition != gridPosition)
         {
             //Unit changed Grid Position
-            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newgridPosition);
-            gridPosition = newgridPosition;
+            GridPosition oldGridPosition = gridPosition;
+            gridPosition = newGridPosition;
+
+            LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
         }
     }
 

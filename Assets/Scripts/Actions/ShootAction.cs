@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class ShootAction : BaseAction
 {
@@ -106,6 +107,12 @@ public class ShootAction : BaseAction
                 GridPosition offsetGridPosition = new GridPosition(x, z);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
+                int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
+                if (testDistance > maxShootDistance)
+                {
+                    continue;
+                }
+
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                 {
                     continue;
@@ -148,5 +155,10 @@ public class ShootAction : BaseAction
     public Unit GetTargetUnit()
     {
         return targetUnit;
+    }
+
+    public int GetMaxShootDistance()
+    {
+        return maxShootDistance;
     }
 }

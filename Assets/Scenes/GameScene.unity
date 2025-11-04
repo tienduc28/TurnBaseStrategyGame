@@ -941,6 +941,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSystemVisualSinglePrefab: {fileID: 187405558475596579, guid: 659941e12f9d0fb459af0aaf32e05fd6,
     type: 3}
+  gridVisualTypeMaterialList:
+  - gridVisualType: 0
+    material: {fileID: 2100000, guid: 4825498343f5cda48a158d63fe98c541, type: 2}
+  - gridVisualType: 1
+    material: {fileID: 2100000, guid: f6746886b3409e34199c63b2f9000d12, type: 2}
+  - gridVisualType: 2
+    material: {fileID: 2100000, guid: 138455a7ee04b7c4a812553ae5f682e1, type: 2}
+  - gridVisualType: 3
+    material: {fileID: 2100000, guid: e00d5580dc40b5e4382fef7e3e5173ba, type: 2}
+  - gridVisualType: 4
+    material: {fileID: 2100000, guid: 9c14dc5915a27d34aa006aa17388f423, type: 2}
 --- !u!4 &418173408
 Transform:
   m_ObjectHideFlags: 0
@@ -1341,7 +1352,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &609064787
 Transform:
   m_ObjectHideFlags: 0
