@@ -24,7 +24,13 @@ public class TurnSystemUI : MonoBehaviour
             return;
         }
 
-        endTurnBtn.onClick.AddListener(NextTurn);
+        //endTurnBtn.onClick.AddListener(NextTurn);
+
+        endTurnBtn.onClick.AddListener(() =>
+        {
+            TurnSystem.Instance.NextTurn();
+        });
+
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
 
@@ -40,13 +46,6 @@ public class TurnSystemUI : MonoBehaviour
         UpdateEnemyTurnVisual();
         UpdateEndButtonVisibility();
     } 
-
-    private void NextTurn()
-    {
-        TurnSystem.Instance.NextTurn();
-        Debug.Log("Next turn starts!");
-        // Implement your turn-switching logic here
-    }
 
     private void UpdateTurnText()
     {

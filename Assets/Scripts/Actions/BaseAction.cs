@@ -57,7 +57,7 @@ public abstract class BaseAction : MonoBehaviour
         return unit;
     }
 
-    public EnemyAIAction GetBestEnemyAIACtion()
+    public EnemyAIAction GetBestEnemyAIAction()
     {
         List<EnemyAIAction> enemyAIActionsList = new List<EnemyAIAction>();
         List<GridPosition> validActionGridPositionList = GetValidActionGridPositionList();

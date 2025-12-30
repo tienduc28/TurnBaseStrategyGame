@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class EnemyAI : MonoBehaviour
 {
+
     private enum State
     {
-        Waiting,
+        WaitingForEnemyTurn,
         TakingTurn,
         Busy,
     }
@@ -17,19 +18,24 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake()
     {
-        state = State.Waiting;
-        timer = 2f;
+        state = State.WaitingForEnemyTurn;
     }
+
     private void Start()
     {
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
+
     private void Update()
     {
+        if (TurnSystem.Instance.IsPlayerTurn())
+        {
+            return;
+        }
+
         switch (state)
         {
-            case State.Waiting:
-                //UpdateWaiting();
+            case State.WaitingForEnemyTurn:
                 break;
             case State.TakingTurn:
                 timer -= Time.deltaTime;
@@ -41,21 +47,16 @@ public class EnemyAI : MonoBehaviour
                     }
                     else
                     {
-                        // No more enemy actions, end turn
+                        // No more enemies have actions they can take, end enemy turn
                         TurnSystem.Instance.NextTurn();
                     }
                 }
-                //UpdateTakingTurn();
                 break;
             case State.Busy:
-                //Do nothing
                 break;
         }
-        if (TurnSystem.Instance.IsPlayerTurn())
-        {
-            return;
-        }
     }
+
     private void SetStateTakingTurn()
     {
         timer = 0.5f;
@@ -73,7 +74,6 @@ public class EnemyAI : MonoBehaviour
 
     private bool TryTakeEnemyAIAction(Action onEnemyAIActionComplete)
     {
-        Debug.Log("Take Enemy AI Action");
         foreach (Unit enemyUnit in UnitManager.Instance.GetEnemyUnitList())
         {
             if (TryTakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete))
@@ -89,28 +89,30 @@ public class EnemyAI : MonoBehaviour
     {
         EnemyAIAction bestEnemyAIAction = null;
         BaseAction bestBaseAction = null;
+
         foreach (BaseAction baseAction in enemyUnit.GetBaseActionArray())
         {
             if (!enemyUnit.CanSpendActionPointsToTakeAction(baseAction))
             {
+                // Enemy cannot afford this action
                 continue;
             }
-            
+
             if (bestEnemyAIAction == null)
             {
-                bestEnemyAIAction = baseAction.GetBestEnemyAIACtion();
+                bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
                 bestBaseAction = baseAction;
             }
             else
             {
-                EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIACtion();
+                EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIAction();
                 if (testEnemyAIAction != null && testEnemyAIAction.actionValue > bestEnemyAIAction.actionValue)
                 {
                     bestEnemyAIAction = testEnemyAIAction;
                     bestBaseAction = baseAction;
                 }
             }
-            baseAction.GetBestEnemyAIACtion();
+
         }
 
         if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))

@@ -6,6 +6,7 @@ using UnityEngine.SocialPlatforms;
 
 public class ShootAction : BaseAction
 {
+    public static event EventHandler<OnShootEventArgs> OnAnyShoot;
     public event EventHandler<OnShootEventArgs> OnShoot;
 
     public class OnShootEventArgs : EventArgs
@@ -20,6 +21,7 @@ public class ShootAction : BaseAction
         Cooloff,
     }
 
+    [SerializeField] private LayerMask obstaclesLayerMask;
     private State state;
     private int maxShootDistance = 7;
     private float stateTimer;
@@ -82,10 +84,17 @@ public class ShootAction : BaseAction
 
     private void Shoot()
     {
+        OnAnyShoot?.Invoke(this, new OnShootEventArgs {
+            targetUnit = targetUnit,
+            shootingUnit = unit
+        });
+
         OnShoot?.Invoke(this, new OnShootEventArgs {
             targetUnit = targetUnit,
             shootingUnit = unit
         });
+
+        ScreenShake.Instance.Shake(5f);
 
         targetUnit.Damage(40);
     }
@@ -139,6 +148,19 @@ public class ShootAction : BaseAction
                 if (targetUnit.IsEnemy() == unit.IsEnemy())
                 {
                     // Both Unit on the same team
+                    continue;
+                }
+
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                float unitShoulderHeight = 1.7f;
+                if (Physics.Raycast(
+                    unitWorldPosition + Vector3.up * unitShoulderHeight,
+                    shootDir,
+                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                    obstaclesLayerMask)) 
+                {
+                    // There is an obstacle in the way
                     continue;
                 }
 
