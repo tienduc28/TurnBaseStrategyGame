@@ -17,6 +17,6 @@ public class ScreenShakeActions : MonoBehaviour
 
     private void GrenadeProjectile_OnAnyGrenadeExploded(object sender, System.EventArgs e)
     {
-        ScreenShake.Instance.Shake(3f);
+        ScreenShake.Instance.Shake(5f);
     }
 }

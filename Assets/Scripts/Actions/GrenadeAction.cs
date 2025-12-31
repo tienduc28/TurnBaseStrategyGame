@@ -10,7 +10,7 @@ public class GrenadeAction : BaseAction
     [SerializeField] private Transform grenadeProjectilePrefab;
 
 
-    private int maxThrowDistance = 7;
+    private int maxThrowDistance = 5;
 
     private void Update()
     {
@@ -24,6 +24,11 @@ public class GrenadeAction : BaseAction
     public override string GetActionName()
     {
         return "Grenade";
+    }
+
+    public override int GetActionPointCost()
+    {
+        return 4;
     }
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
@@ -79,5 +84,8 @@ public class GrenadeAction : BaseAction
     {
         ActionComplete();
     }
-
+    public int GetMaxThrowDistance()
+    {
+        return maxThrowDistance;
+    }
 }

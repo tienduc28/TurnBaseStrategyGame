@@ -235,6 +235,10 @@ public class Pathfinding : MonoBehaviour
         return neighbourList;
     }
 
+    public void SetIsWalkableGridPosition(GridPosition gridPosition, bool isWalkable)
+    {
+        gridSystem.GetGridObject(gridPosition).SetIsWalkable(isWalkable);
+    }
     public bool IsWalkableGridPosition(GridPosition gridPosition)
     {
         return gridSystem.GetGridObject(gridPosition).IsWalkable();
