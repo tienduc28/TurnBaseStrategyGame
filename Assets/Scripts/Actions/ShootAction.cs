@@ -104,7 +104,7 @@ public class ShootAction : BaseAction
     }
     public override int GetActionPointCost()
     {
-        return 3;
+        return 2;
     }
 
     public override List<GridPosition> GetValidActionGridPositionList()

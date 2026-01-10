@@ -70,7 +70,7 @@ public class UnitActionSystemUI : MonoBehaviour
 
     private void UpdateSelectedVisual()
     {
-        foreach(ActionButtonUI actionButtonUI in actionButtonUIList)
+        foreach (ActionButtonUI actionButtonUI in actionButtonUIList)
         {
             actionButtonUI.UpdateSelectedVisual();
         }

@@ -3,14 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeAction : BaseAction
+public class InteractAction : BaseAction
 {
 
+    private int maxInteractDistance = 1;
 
-    [SerializeField] private Transform grenadeProjectilePrefab;
-
-
-    private int maxThrowDistance = 5;
 
     private void Update()
     {
@@ -20,15 +17,9 @@ public class GrenadeAction : BaseAction
         }
     }
 
-
     public override string GetActionName()
     {
-        return "Grenade";
-    }
-
-    public override int GetActionPointCost()
-    {
-        return 3;
+        return "Interact";
     }
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
@@ -36,7 +27,7 @@ public class GrenadeAction : BaseAction
         return new EnemyAIAction
         {
             gridPosition = gridPosition,
-            actionValue = 0,
+            actionValue = 0
         };
     }
 
@@ -46,9 +37,9 @@ public class GrenadeAction : BaseAction
 
         GridPosition unitGridPosition = unit.GetGridPosition();
 
-        for (int x = -maxThrowDistance; x <= maxThrowDistance; x++)
+        for (int x = -maxInteractDistance; x <= maxInteractDistance; x++)
         {
-            for (int z = -maxThrowDistance; z <= maxThrowDistance; z++)
+            for (int z = -maxInteractDistance; z <= maxInteractDistance; z++)
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
@@ -58,9 +49,11 @@ public class GrenadeAction : BaseAction
                     continue;
                 }
 
-                int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                if (testDistance > maxThrowDistance)
+                Door door = LevelGrid.Instance.GetDoorAtGridPosition(testGridPosition);
+
+                if (door == null)
                 {
+                    // No Door on this GridPosition
                     continue;
                 }
 
@@ -73,19 +66,16 @@ public class GrenadeAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        Transform grenadeProjectileTransform = Instantiate(grenadeProjectilePrefab, unit.GetWorldPosition(), Quaternion.identity);
-        GrenadeProjectile grenadeProjectile = grenadeProjectileTransform.GetComponent<GrenadeProjectile>();
-        grenadeProjectile.Setup(gridPosition, OnGrenadeBehaviourComplete);
+        Door door = LevelGrid.Instance.GetDoorAtGridPosition(gridPosition);
+
+        door.Interact(OnInteractComplete);
 
         ActionStart(onActionComplete);
     }
 
-    private void OnGrenadeBehaviourComplete()
+    private void OnInteractComplete()
     {
         ActionComplete();
     }
-    public int GetMaxThrowDistance()
-    {
-        return maxThrowDistance;
-    }
+
 }

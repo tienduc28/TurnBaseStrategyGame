@@ -140,7 +140,7 @@ public class Unit : MonoBehaviour
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
         Destroy(gameObject);
 
-        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
+        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);    
     }
 
     public float GetHealthNormalized()

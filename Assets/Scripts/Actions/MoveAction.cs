@@ -10,7 +10,7 @@ public class MoveAction : BaseAction
     public event EventHandler OnStartMoving;
     public event EventHandler OnStopMoving;
 
-    [SerializeField] private int maxMoveDistance = 4;
+    [SerializeField] private int maxMoveDistance;
 
     private List<Vector3> positionList;
     private int currentPositionIndex;
