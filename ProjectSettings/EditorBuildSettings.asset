@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MultiplayerScene.unity
     guid: ee58633d2b2241f48a16ff1c49a74ef4
+  - enabled: 1
+    path: Assets/LobbyTutorial/MenuScene.unity
+    guid: be8200a558cfff84b8ce074fa6e33558
   m_configObjects: {}

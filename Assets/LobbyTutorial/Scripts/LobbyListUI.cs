@@ -11,7 +11,7 @@ public class LobbyListUI : MonoBehaviour {
     public static LobbyListUI Instance { get; private set; }
 
 
-
+    [SerializeField] private GameObject lobbyListPanel;
     [SerializeField] private Transform lobbySingleTemplate;
     [SerializeField] private Transform container;
     [SerializeField] private Button refreshButton;
@@ -74,11 +74,11 @@ public class LobbyListUI : MonoBehaviour {
     }
 
     private void Hide() {
-        gameObject.SetActive(false);
+        lobbyListPanel.SetActive(false);
     }
 
     private void Show() {
-        gameObject.SetActive(true);
+        lobbyListPanel.SetActive(true);
     }
 
 }

@@ -10,6 +10,7 @@ public class LobbyCreateUI : MonoBehaviour {
     public static LobbyCreateUI Instance { get; private set; }
 
 
+    [SerializeField] private GameObject lobbyCreatePanel;
     [SerializeField] private Button createButton;
     [SerializeField] private Button lobbyNameButton;
     [SerializeField] private Button publicPrivateButton;
@@ -90,11 +91,11 @@ public class LobbyCreateUI : MonoBehaviour {
     }
 
     private void Hide() {
-        gameObject.SetActive(false);
+        lobbyCreatePanel.SetActive(false);
     }
 
     public void Show() {
-        gameObject.SetActive(true);
+        lobbyCreatePanel.SetActive(true);
 
         lobbyName = "MyLobby";
         isPrivate = false;
