@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : NetworkBehaviour
 {
     [SerializeField] private GameObject actionCameraGameObject;
 
@@ -23,6 +24,20 @@ public class CameraManager : MonoBehaviour
     {
         actionCameraGameObject.SetActive(false);
     }   
+
+    protected virtual void HandleActionCamera(bool cameraOn, Vector3 position, Vector3 lookAt)
+    {
+        if (cameraOn)
+        {
+            ShowActionCamera();
+            actionCameraGameObject.transform.position = position;
+            actionCameraGameObject.transform.LookAt(lookAt);
+        }
+        else
+        {
+            HideActionCamera();
+        }
+    }
 
     private void BaseAction_OnAnyActionStarted(object sender, EventArgs e)
     {
@@ -45,19 +60,17 @@ public class CameraManager : MonoBehaviour
                     shoulderOffset +
                     (shootDir * -1f);
 
-                actionCameraGameObject.transform.position = actionCameraPosition;
-                actionCameraGameObject.transform.LookAt(targetUnit.GetWorldPosition() + cameraCharacterHeight);
-                ShowActionCamera();
+                HandleActionCamera(true, actionCameraPosition, targetUnit.GetWorldPosition() + cameraCharacterHeight);
                 break;
         }
     }
 
-    private void BaseAction_OnAnyActionCompleted(object sender, EventArgs e)
+    private void BaseAction_OnAnyActionCompleted(object sender, EventArgs e) 
     {
         switch (sender)
         {
             case ShootAction shootAction:
-                HideActionCamera();
+                HandleActionCamera(false, Vector3.zero, Vector3.zero);
                 break;
         }
     }

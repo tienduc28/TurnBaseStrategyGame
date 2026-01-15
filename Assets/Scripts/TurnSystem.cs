@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using Unity.Netcode;
 
-public class TurnSystem : MonoBehaviour
+public class TurnSystem : NetworkBehaviour
 {
     public static TurnSystem Instance { get; private set; } // Singleton instance
 
     public event EventHandler OnTurnChanged;
 
-    private int turnNumber = 1;
-    private bool isPlayerTurn = true;
+    protected NetworkVariable<int> turnNumber = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    protected bool isPlayerTurn = true;
 
     private void Awake()
     {
@@ -24,9 +25,10 @@ public class TurnSystem : MonoBehaviour
         Instance = this;
         Debug.Log("Turn: " + turnNumber);
     }
-    public void NextTurn()
+
+    public virtual void NextTurn()
     {
-        turnNumber++;
+        turnNumber.Value++;
         Debug.Log("Is Player Turn: " + isPlayerTurn);
         isPlayerTurn = !isPlayerTurn;
         Debug.Log("Is Player Turn: " + isPlayerTurn);
@@ -35,9 +37,14 @@ public class TurnSystem : MonoBehaviour
         OnTurnChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    protected void InvokeOnTurnChange()
+    {
+        OnTurnChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     public int GetTurnNumber()
     {
-        return turnNumber;
+        return turnNumber.Value;
     }
 
     public bool IsPlayerTurn()

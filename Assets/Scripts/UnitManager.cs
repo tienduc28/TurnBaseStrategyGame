@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class UnitManager : MonoBehaviour
+public class UnitManager : NetworkBehaviour
 {
     public static UnitManager Instance { get; private set; }
 
-    private List<Unit> unitList;
-    private List<Unit> friendlyUnitList;
-    private List<Unit> enemyUnitList;
+    protected List<Unit> unitList;
+    protected List<Unit> friendlyUnitList;
+    protected List<Unit> enemyUnitList;
 
     private void Awake()
     {
@@ -18,16 +19,19 @@ public class UnitManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         unitList = new List<Unit>();
         friendlyUnitList = new List<Unit>();
         enemyUnitList = new List<Unit>();
     }
+
     private void Start()
     {
         Unit.OnAnyUnitSpawned += Unit_OnAnyUnitSpawned;
         Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
     }
+
     private void Unit_OnAnyUnitSpawned(object sender, System.EventArgs e)
     {
         Unit unit = sender as Unit;

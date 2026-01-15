@@ -32,9 +32,9 @@ public class SpinAction : BaseAction
         ActionStart(onActionComplete);
     }
 
-    public override string GetActionName()
+    public override ActionType GetActionType()
     {
-        return "Spin";
+        return ActionType.Spin;
     }
 
     public override List<GridPosition> GetValidActionGridPositionList()

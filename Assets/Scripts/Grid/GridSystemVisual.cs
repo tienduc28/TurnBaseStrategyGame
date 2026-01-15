@@ -126,6 +126,11 @@ public class GridSystemVisual : MonoBehaviour
 
     public void ShowGridPositionList(List<GridPosition> gridPositionList, GridVisualType gridVisualType)
     {
+        if (gridPositionList == null || gridPositionList.Count == 0)
+        {
+            return;
+        }
+
         foreach (GridPosition gridPosition in gridPositionList)
         {
             gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show(GetGridVisualTypeMaterial(gridVisualType));
@@ -135,6 +140,11 @@ public class GridSystemVisual : MonoBehaviour
     private void UpdateGridVisual()
     {
         HideAllGridPosition();
+
+        if (!TurnSystem.Instance.IsPlayerTurn())
+        {
+            return;
+        }
 
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
         BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
@@ -168,7 +178,7 @@ public class GridSystemVisual : MonoBehaviour
         }
 
         ShowGridPositionList(
-            selectedAction.GetValidActionGridPositionList(),
+            selectedAction?.GetValidActionGridPositionList(),
             gridVisualType
         );
     }

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.Netcode;
 
-public class Unit : MonoBehaviour
+public class Unit : NetworkBehaviour
 {
     private const int MAX_ACTION_POINTS = 5;
 
@@ -16,7 +17,7 @@ public class Unit : MonoBehaviour
     private BaseAction[] baseActionArray;
 
     [SerializeField]
-    private int actionPoints = MAX_ACTION_POINTS;
+    private NetworkVariable<int> actionPoints = new NetworkVariable<int>(MAX_ACTION_POINTS, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     [SerializeField]
     private bool isEnemy;
@@ -26,6 +27,16 @@ public class Unit : MonoBehaviour
         baseActionArray = GetComponents<BaseAction>();
         healthSystem = GetComponent<HealthSystem>();
     }
+
+    public override void OnNetworkSpawn()
+    {
+        actionPoints.OnValueChanged += (int prevValue, int newValue) =>
+        {
+            if (!NetworkManager.IsServer)
+                OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        };
+    }
+
     private void Start()
     {
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
@@ -37,6 +48,7 @@ public class Unit : MonoBehaviour
 
         OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
+
     private void Update()
     {
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
@@ -48,6 +60,13 @@ public class Unit : MonoBehaviour
 
             LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
         }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        TurnSystem.Instance.OnTurnChanged -= TurnSystem_OnTurnChanged;
     }
 
     public T GetAction<T>() where T : BaseAction
@@ -91,7 +110,7 @@ public class Unit : MonoBehaviour
     }
     public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
     {
-        if (actionPoints >= baseAction.GetActionPointCost())
+        if (actionPoints.Value >= baseAction.GetActionPointCost())
         {
             return true;
         }
@@ -103,22 +122,28 @@ public class Unit : MonoBehaviour
 
     private void SpendActionPoints(int mount)
     {
-        actionPoints -= mount;
+        actionPoints.Value -= mount;
 
         OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public int GetActionPoints()
     {
-        return actionPoints;
+        return actionPoints.Value;
     }
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
     {
+        //This is bad scripting, should seperate OnTurnChanged into different callbacks
+        if (NetworkManager != null && NetworkManager.IsClient && !NetworkManager.IsServer)
+        {
+            return;
+        }
+
         if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
             (!IsEnemy()) && TurnSystem.Instance.IsPlayerTurn())
         {
-            actionPoints = MAX_ACTION_POINTS;
+            actionPoints.Value = MAX_ACTION_POINTS;
 
             OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -127,6 +152,16 @@ public class Unit : MonoBehaviour
     public bool IsEnemy()
     {
         return isEnemy;
+    }
+
+    public void SetUnitAsEnemy()
+    {
+        isEnemy = true;
+    }
+
+    public void SetUnitAsAlly()
+    {
+        isEnemy = false;
     }
 
     public void Damage(int damageAmount)
@@ -138,13 +173,34 @@ public class Unit : MonoBehaviour
     private void HealthSystem_OnDead(object sender, EventArgs e)
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
-        Destroy(gameObject);
 
-        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);    
+        OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
+
+        //Delay despawn till next frame so multiplayer logic work correctly
+        StartCoroutine(DelayDespawn());
     }
 
     public float GetHealthNormalized()
     {
         return healthSystem.GetHealthNormalized();
     }   
+
+    IEnumerator DelayDespawn()
+    {
+        //This is bad scripting, should seperate OnTurnChanged into different callbacks
+        if (NetworkManager != null && NetworkManager.IsClient && !NetworkManager.IsServer)
+        {
+            yield break;
+        }
+
+        yield return null;
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn(true);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 }

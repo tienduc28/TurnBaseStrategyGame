@@ -98,9 +98,9 @@ public class ShootAction : BaseAction
 
         targetUnit.Damage(40);
     }
-    public override string GetActionName()
+    public override ActionType GetActionType()
     {
-        return "Shoot";
+        return ActionType.Shoot;
     }
     public override int GetActionPointCost()
     {

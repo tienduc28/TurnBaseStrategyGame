@@ -19,7 +19,12 @@ public abstract class BaseAction : MonoBehaviour
         unit = GetComponent<Unit>();
     }
 
-    public abstract string GetActionName();
+    public abstract ActionType GetActionType();
+
+    public string GetActionName()
+    {
+        return GetActionType().ToString();
+    }
 
     public abstract void TakeAction(GridPosition gridPosition, Action onActionComplete);
 
@@ -85,4 +90,15 @@ public abstract class BaseAction : MonoBehaviour
     }
 
     public abstract EnemyAIAction GetEnemyAIAction(GridPosition gridPosition);
+}
+
+public enum ActionType : byte
+{
+    None,
+    Move,
+    Shoot,
+    Gernade,
+    Interact,
+    Sword,
+    Spin,
 }

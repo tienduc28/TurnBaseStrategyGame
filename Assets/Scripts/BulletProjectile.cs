@@ -28,12 +28,24 @@ public class BulletProjectile : MonoBehaviour
         {
             transform.position = targetPosition;
 
-            trailRenderer.transform.parent = null;
+            ResetTrail();
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
 
-            Instantiate(bulletHitVfxPrefab, targetPosition, Quaternion.identity);
+            GameVFXManager.Instance.SpawnHitVFX(targetPosition);
         }
 
+    }
+
+    public void ResetTrail()
+    {
+        trailRenderer.emitting = false;
+        trailRenderer.Clear();
+    }
+
+    public void PlayTrail()
+    {
+        trailRenderer.Clear();
+        trailRenderer.emitting = true;
     }
 }

@@ -65,9 +65,9 @@ public class SwordAction : BaseAction
 
         Debug.Log(state);
     }
-    public override string GetActionName()
+    public override ActionType GetActionType()
     {
-        return "Sword";
+        return ActionType.Sword;
     }
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)

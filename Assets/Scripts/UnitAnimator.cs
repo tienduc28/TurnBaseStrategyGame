@@ -6,7 +6,6 @@ using System;
 public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-    [SerializeField] private Transform bulletProjectilePrefab;
     [SerializeField] private Transform shootPointTransform;
     [SerializeField] private Transform rifleTransform;
     [SerializeField] private Transform swordTransform;
@@ -60,16 +59,17 @@ public class UnitAnimator : MonoBehaviour
     {
         animator.SetTrigger("Shoot");
 
-        Transform bulletProjectileTransform = 
-            Instantiate(bulletProjectilePrefab, shootPointTransform.position, Quaternion.identity);
+        GameVFXManager.Instance.SpawnBulletProjectile(shootPointTransform.position, e.targetUnit.GetWorldPosition());
+        //Transform bulletProjectileTransform = 
+        //    Instantiate(bulletProjectilePrefab, shootPointTransform.position, Quaternion.identity);
 
-        BulletProjectile bulletProjectile = bulletProjectileTransform.GetComponent<BulletProjectile>();
+        //BulletProjectile bulletProjectile = bulletProjectileTransform.GetComponent<BulletProjectile>();
 
-        Vector3 targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
+        //Vector3 targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
 
-        targetUnitShootAtPosition.y = shootPointTransform.position.y;
+        //targetUnitShootAtPosition.y = shootPointTransform.position.y;
 
-        bulletProjectile.Setup(targetUnitShootAtPosition);
+        //bulletProjectile.Setup(targetUnitShootAtPosition);
     }
     private void EquipSword()
     {

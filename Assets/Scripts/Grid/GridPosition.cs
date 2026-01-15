@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public struct GridPosition : IEquatable<GridPosition>
+public struct GridPosition : IEquatable<GridPosition>, INetworkSerializable
 {
     public int x;
     public int z;
@@ -34,6 +35,12 @@ public struct GridPosition : IEquatable<GridPosition>
     public override string ToString()
     {
         return $"x: {x}; z: {z}";
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref x);
+        serializer.SerializeValue(ref z);
     }
 
     public static bool operator == (GridPosition a, GridPosition b)

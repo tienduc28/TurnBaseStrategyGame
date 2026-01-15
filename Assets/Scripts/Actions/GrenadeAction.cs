@@ -21,9 +21,9 @@ public class GrenadeAction : BaseAction
     }
 
 
-    public override string GetActionName()
+    public override ActionType GetActionType()
     {
-        return "Grenade";
+        return ActionType.Gernade;
     }
 
     public override int GetActionPointCost()
