@@ -535,6 +535,7 @@ public class LobbyManager : NetworkBehaviour {
         }
     }
 
+    static string MULTIPLAYER_SCENE = "MultiplayerScene";
     public async void StartGame()
     {
         if (!IsLobbyHost() || !IsLobbyReady()) return;
@@ -553,6 +554,8 @@ public class LobbyManager : NetworkBehaviour {
             joinedLobby = lobby;
             
             Debug.Log("Starting Game: " + relayCode);
+
+            NetworkManager.Singleton.SceneManager.LoadScene(MULTIPLAYER_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
         catch (LobbyServiceException e)
         {
@@ -562,6 +565,7 @@ public class LobbyManager : NetworkBehaviour {
 
     private bool IsLobbyReady()
     {
+        return true;
         //Lobby ready logic
         return lobbyCount >= maxPlayer;
     }
