@@ -26,7 +26,7 @@ public class UnitManager : NetworkBehaviour
         enemyUnitList = new List<Unit>();
     }
 
-    private void Start()
+    protected void Start()
     {
         Unit.OnAnyUnitSpawned += Unit_OnAnyUnitSpawned;
         Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;

@@ -79,6 +79,10 @@ public class LobbyUI : MonoBehaviour {
     }
 
     private void UpdateLobby(Lobby lobby) {
+        //New scene is loaded but lobby still updated then ignore
+        if (container == null)
+            return;
+
         ClearLobby();
 
         foreach (Player player in lobby.Players) {

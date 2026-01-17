@@ -6,9 +6,27 @@ using UnityEngine;
 
 public class UnitManagerMultiplayer : UnitManager
 {
+    bool networkSpawned = false;
+    bool inited = false;
     public override void OnNetworkSpawn()
     {
-        if (NetworkManager.IsHost)
+        networkSpawned = true;   
+    }
+
+    // Initialization should not be here
+    // Should change unit initialization to be handled completely in UnitManager then put this with flag in Start and OnNetworkSpawn
+    private void Update()
+    {
+        if (networkSpawned && !inited)
+        {
+            InitMultiplayer();
+            inited = true;
+        }
+    }
+
+    private void InitMultiplayer()
+    {
+        if (NetworkManager.IsServer)
         {
             //Switch size for host
             List<Unit> temp = friendlyUnitList.ToList();
@@ -30,6 +48,4 @@ public class UnitManagerMultiplayer : UnitManager
             return;
         }
     }
-
-
 }

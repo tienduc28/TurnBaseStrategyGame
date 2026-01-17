@@ -18,7 +18,7 @@ public class TurnSystemMultiplayer : TurnSystem
             }
         };
 
-        if (NetworkManager.IsHost)
+        if (NetworkManager.IsServer)
         {
             isPlayerTurn = false;
         }
