@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.Netcode;
 
-public class DestructibleCrate : MonoBehaviour
+public class DestructibleCrate : NetworkBehaviour
 {
     [SerializeField] private Transform crateDestroyedPrefab;
     public static event EventHandler OnAnyDestructibleCrateDestroyed;
@@ -26,6 +27,8 @@ public class DestructibleCrate : MonoBehaviour
         Destroy(gameObject);
 
         OnAnyDestructibleCrateDestroyed?.Invoke(this, EventArgs.Empty);
+
+        DestroyCreateClientRPC();
     }
 
     private void ApplyExplosionToChildren(Transform root, float explosionForce, Vector3 explosionPosition, float explosionRange)
@@ -39,5 +42,19 @@ public class DestructibleCrate : MonoBehaviour
 
             ApplyExplosionToChildren(child, explosionForce, explosionPosition, explosionRange);
         }
+    }
+
+    [ClientRpc]
+    private void DestroyCreateClientRPC()
+    {
+        if (NetworkManager.IsServer) return;
+
+        Transform crateDestroyedTransform = Instantiate(crateDestroyedPrefab, transform.position, Quaternion.identity);
+
+        ApplyExplosionToChildren(crateDestroyedTransform, 150f, transform.position, 10f);
+
+        Destroy(gameObject);
+
+        OnAnyDestructibleCrateDestroyed?.Invoke(this, EventArgs.Empty);
     }
 }
