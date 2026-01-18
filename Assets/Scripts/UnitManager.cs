@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -10,6 +11,8 @@ public class UnitManager : NetworkBehaviour
     protected List<Unit> unitList;
     protected List<Unit> friendlyUnitList;
     protected List<Unit> enemyUnitList;
+
+    public event EventHandler OnGameResult;
 
     private void Awake()
     {
@@ -45,6 +48,7 @@ public class UnitManager : NetworkBehaviour
             friendlyUnitList.Add(unit);
         }
     }
+
     private void Unit_OnAnyUnitDead(object sender, System.EventArgs e)
     {
         Unit unit = sender as Unit;
@@ -57,6 +61,16 @@ public class UnitManager : NetworkBehaviour
         {
             friendlyUnitList.Remove(unit);
         }
+
+        if (enemyUnitList.Count == 0)
+        {
+            OnGameEnd(true);
+        }
+        else if (friendlyUnitList.Count == 0)
+        {
+            OnGameEnd(false);
+        }
+
     }
     public List<Unit> GetUnitList()
     {
@@ -71,4 +85,19 @@ public class UnitManager : NetworkBehaviour
         return enemyUnitList;
     }
 
+    protected virtual void OnGameEnd(bool isWin)
+    {
+        OnGameResult?.Invoke(this, new GameEndArgs(isWin));
+    }
+
+}
+
+public class GameEndArgs : EventArgs
+{
+    public bool IsWin { get; private set; }
+
+    public GameEndArgs(bool isWin)
+    {
+        IsWin = isWin;
+    }
 }

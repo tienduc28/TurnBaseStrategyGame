@@ -73,18 +73,21 @@ public class LobbyManager : NetworkBehaviour {
         options.SetProfile(now.ToString());
         await UnityServices.InitializeAsync(options);
 
-        AuthenticationService.Instance.SignedIn += () =>
+        if (!AuthenticationService.Instance.IsSignedIn)
         {
-            Debug.Log("Player logged in with id: " + AuthenticationService.Instance.PlayerId);
-        };
+            AuthenticationService.Instance.SignedIn += () =>
+            {
+                Debug.Log("Player logged in with id: " + AuthenticationService.Instance.PlayerId);
+            };
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        NetworkManager.Singleton.NetworkConfig.ConnectionApproval = true;
-        NetworkManager.Singleton.OnConnectionEvent += HandleConnectionEvent;
-        NetworkManager.Singleton.OnConnectionEvent += HandleDisconnectionEvent;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
-        NetworkManager.ConnectionApprovalCallback = ApproveConnection;
-        //NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneChange;
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            NetworkManager.Singleton.NetworkConfig.ConnectionApproval = true;
+            NetworkManager.Singleton.OnConnectionEvent += HandleConnectionEvent;
+            NetworkManager.Singleton.OnConnectionEvent += HandleDisconnectionEvent;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+            NetworkManager.ConnectionApprovalCallback = ApproveConnection;
+            //NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneChange;
+        }
     }
 
     static int maxPlayer = 2;
@@ -565,8 +568,7 @@ public class LobbyManager : NetworkBehaviour {
 
     private bool IsLobbyReady()
     {
-        return true;
         //Lobby ready logic
-        return lobbyCount >= maxPlayer;
+        return joinedLobby.Players.Count >= maxPlayer;
     }
 }

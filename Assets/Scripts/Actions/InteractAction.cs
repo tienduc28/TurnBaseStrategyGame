@@ -26,8 +26,8 @@ public class InteractAction : BaseAction
     {
         return new EnemyAIAction
         {
+            actionValue = 0,
             gridPosition = gridPosition,
-            actionValue = 0
         };
     }
 
@@ -76,6 +76,11 @@ public class InteractAction : BaseAction
     private void OnInteractComplete()
     {
         ActionComplete();
+    }
+
+    public override int GetActionPointCost()
+    {
+        return 1;
     }
 
 }
