@@ -287,7 +287,7 @@ public class LobbyManager : NetworkBehaviour {
             }
         };
 
-        Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
+        Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 2, options);
 
         joinedLobby = lobby;
 

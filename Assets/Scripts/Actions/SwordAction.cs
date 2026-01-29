@@ -134,5 +134,10 @@ public class SwordAction : BaseAction
     {
         return maxSwordDistance;
     }
+    
+    public override int GetActionPointCost()
+    {
+        return 1;
+    }
 
 }
