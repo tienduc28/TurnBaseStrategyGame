@@ -10,7 +10,7 @@ public class UnitActionSystemMultiplayer : UnitActionSystem
     protected override void HandleSelectedAction()
     {
         if (selectedUnit == null)
-            return; ;
+            return; 
 
         GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
         if (Input.GetMouseButtonDown(0))

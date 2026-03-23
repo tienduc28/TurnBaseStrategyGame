@@ -20,4 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MultiplayerScene.unity
     guid: d617e3bfe56a09a43a1c200f122fae00
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: dddf725259280374789c054c64a4607c,
+      type: 3}

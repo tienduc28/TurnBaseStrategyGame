@@ -60,7 +60,7 @@ public class UnitActionSystem : NetworkBehaviour
             return;
         }
 
-        if (InputManager.Instance.IsMouseButtonDown())
+        if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
             if (TryHandleUnitSelection())
             {
@@ -78,7 +78,7 @@ public class UnitActionSystem : NetworkBehaviour
             return;
         
         GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
-        if (InputManager.Instance.IsMouseButtonDown())
+        if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
             SelectedActionLogic(mouseGridPosition);
         }
@@ -117,7 +117,7 @@ public class UnitActionSystem : NetworkBehaviour
     }
     private bool TryHandleUnitSelection()
     {
-        if (InputManager.Instance.IsMouseButtonDown())
+        if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
             Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
